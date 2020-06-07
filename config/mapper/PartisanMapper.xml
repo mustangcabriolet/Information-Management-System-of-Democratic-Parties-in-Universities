@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 该文件编写mybatis中的mapper接口里面的方法提供对应的sql语句 -->
+<mapper namespace="GP.dao.PartisanMapper">
+
+	<!-- 查询所有数据 -->
+	<select id="findAl" resultType="GP.domain.Partisan">
+		SELECT 	id, 
+			name,
+             gender,
+             school,
+             partisan,
+             address,
+             join_time,
+             telephone
+			FROM 
+		gp.partisan
+	</select>
+	
+	<!-- 添加客户 -->
+	<insert id="save" parameterType="GP.domain.Partisan">
+		insert into gp.partisan
+            (
+             name,
+             gender,
+             school,
+             partisan,
+             address,
+             join_time,
+             telephone
+             )
+values (
+        #{name},
+        #{gender},
+        #{school},
+        #{partisan},
+        #{address},
+        #{join_time},
+        #{telephone}
+)
+	</insert>
+	
+	<!-- 根据id查询对象 -->
+	<select id="findById" parameterType="int" resultType="GP.domain.Partisan">
+		SELECT id,
+			name,
+             gender,
+             school,
+             partisan,
+             address,
+             join_time,
+             telephone
+			FROM
+		gp.partisan
+		    where id = #{value}
+	</select>
+
+	<!-- 根据str查询对象 -->
+	<select id="findByStr" parameterType="String" resultType="GP.domain.Partisan">
+		SELECT 	id,
+			name,
+             gender,
+             school,
+             partisan,
+             address,
+             join_time,
+             telephone
+			FROM
+		gp.partisan
+		    where partisan = #{value} or school = #{value} or name=#{value}
+		     or address = #{value} or join_time= #{value}
+	</select>
+
+	<!-- 根据id修改数据 -->
+	<update id="update" parameterType="GP.domain.Partisan">
+		UPDATE gp.partisan
+			SET
+			NAME = #{name},
+			gender = #{gender},
+			school = #{school},
+			partisan = #{partisan},
+			join_time = #{join_time},
+			telephone = #{telephone},
+			address = #{address}
+		WHERE
+			id = #{id}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Integer[]">
+	DELETE FROM gp.partisan
+		<where>
+			id
+			<foreach collection="array" item="id" open="in (" close=")" separator=",">
+				#{id}			
+			</foreach>
+		</where>
+	</delete>
+	
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 引入外部资源文件 -->
+    <typeAliases>
+        <package name="GP.domain"/>
+    </typeAliases>
+    <!-- 配置环境：可以配置多个环境，default：配置某一个环境的唯一标识，表示默认使用哪个环境 -->
+<!--    <plugins>-->
+<!--        <plugin interceptor="com.github.pagehelper.PageInterceptor">-->
+<!--            &lt;!&ndash; 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库&ndash;&gt;-->
+<!--            <property name="helperDialect" value="mysql"/>-->
+<!--        </plugin>-->
+<!--    </plugins>-->
+    <!-- 配置映射文件：用来配置sql语句和结果集类型等 -->
+    <mappers>
+        <mapper resource="mapper/PartisanMapper.xml"/>
+        <mapper resource="mapper/LoginMapper.xml"/>
+        <mapper resource="mapper/PartisanInfoMapper.xml"/>
+    </mappers>
+</configuration>
