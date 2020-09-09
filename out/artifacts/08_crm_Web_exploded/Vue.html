@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript" src="easyui/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>VueTest</title>
+</head>
+<body>
+<!--<div id="app">
+    <input type="button" value="get请求" @click="getjoke">
+    <p>{{joke.data}}</p>
+   &lt;!&ndash; <p>{{joke}}</p>&ndash;&gt;
+    <input type="button" value="用户注册post请求" @click="registe">
+    <a href="http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg">链接</a>
+</div>-->
+
+<div id="search">
+    <input type="text" size="20" v-model:id="keywords" autofocus="autofocus"><input type="button" value="搜索" @click="searchs">
+    <ul>
+        <li v-for="item in result">
+             <a>{{item.id}}</a><button @click="play(item.id)" href="">播放</button>
+            <span>{{item.name}}</span>
+        <ul>
+            <li v-for="items in item.artists">
+                <a>{{items.name}}</a>
+                <a @click="tiaozhaun(items.img1v1Url)" href="">{{items.img1v1Url}}</a>
+            </li>
+        </ul>
+            <button @click="comment(item.id)" >热门评论</button>
+            <ul v-if="comments[item.id]">
+                <li v-for="Comment in comments[item.id]">
+                    <span>{{Comment.user.nickname}}</span><span>       评论：{{Comment.content}}</span>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+
+</div>
+
+<script>
+    /*获取随机笑话的接口：https://autumnfish.cn/api/joke */
+    /*用户注册接口：https://autumnfish.cn/api/user/reg */
+    /*音乐查询接口: http://musicapi.leanapp.cn/search*/
+    /*音乐查询接口: https://autumnfish.cn/*/
+    /*查询天气接口：http://wthrcdn.etouch.cn/weather_mini*/
+
+    var zhujian = {
+        template:'  <ul >\n' +
+            '                    <li v-for="Comment in comments">\n' +
+            '                        <span>用户名：{{Comment.user.nickname}}</span><span>      ：{{Comment.content}}</span>\n' +
+            '                    </li>\n' +
+            '                </ul>'
+    }
+
+    new Vue({
+        el:'#search',
+        data:{
+            keywords:'',
+            result:[],
+            url:'',
+            comments:{},
+        },
+        components:{
+            'comments':zhujian
+        },
+        methods:
+            {
+                searchs: function(){
+                    var keyword = this.keywords;
+                    var that = this;
+                    axios.get('http://musicapi.leanapp.cn/search?keywords='+keyword)
+                        .then(function (response) {
+                            console.log(response);
+                            console.log(response.data.result.songs[0].artists[0].name);
+                            that.result = response.data.result.songs;
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                },
+                play: function(id){
+                    axios.get('http://musicapi.leanapp.cn/song/url?id='+id)
+                        .then(function (response) {
+                            console.log(response);
+                            // that.url = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                },
+                comment: function(id){
+                    var that = this;
+                    console.log(id);
+                    axios.get('http://musicapi.leanapp.cn/comment/music?id='+id)
+                    .then(function (response) {
+                        console.log(response.data.hotComments[0].user.nickname);
+                        console.log(response.data.hotComments[0].content);
+                        that.$set(that.comments, id, response.data.hotComments);
+                        return id;
+                    })
+                        .catch(function (error) {
+                        console.log(error);
+                    })
+                },
+                tiaozhaun: function (url) {
+                    window.open(url,"_blank")
+                }
+            }
+    })
+
+
+
+
+
+
+    /* new Vue({
+         el: '#app',
+         data :{
+             joke:'',
+            // keywords:''
+         },
+         methods:{
+             getjoke: function () {
+                 //console.log(this.joke)
+                 var that = this;
+                 axios.get('https://autumnfish.cn/api/joke', {
+                 })
+                     .then(function (response) {
+                         console.log(response);
+                         console.log(response.data);
+                         that.joke = response;
+                         //that.joke = response.data;
+                         //alert(response);
+                         //console.log(this.joke);
+                     })
+                     .catch(function (error) {
+                         console.log(error);
+                         //alert(error);
+                     });
+             },*/
+          /*  searchs: function(){
+                var keyword = this.keywords;
+                var that = this;
+                axios.get('http://musicapi.leanapp.cn/search?keywords='+keyword)
+                    .then(function (response) {
+                    console.log(response);
+                    console.log(response.data.result.songs);
+                    that.keywords = response.data.result.songs;
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+            },*/
+          /*  registe: function () {
+                axios.post('loginController.action', {name:"admin",password:"1234"})
+                .then(function (response) {
+                    console.log(response)
+                }, (function (error) {
+                    console.log(error)
+                }))
+
+
+            }
+
+        }
+    })
+*/
+
+</script>
+</body>
+</html>

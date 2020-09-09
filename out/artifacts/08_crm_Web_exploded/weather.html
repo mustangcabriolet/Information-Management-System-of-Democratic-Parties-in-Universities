@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript" src="easyui/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+</head>
+<body>
+<div id="app">
+请输入城市：<input size ="20" type="text" v-model:id="city" ><input value="搜索" @click="getweather" type="button" size="5"></input>
+    <div>
+        <p>{{city}}</p>
+        <ul>
+            <li v-if="yesterday">
+                <p>昨日天气</p>
+                日期：<a>{{yesterday.date}}</a>
+                高温：<a>{{yesterday.high}}</a>
+                低温：<a>{{yesterday.low}}</a>
+                风向：<a>{{yesterday.fx}}</a>
+                天气：<a>{{yesterday.type}}</a>
+            </li>
+        </ul>
+
+    </div>
+
+    <ul>
+        <li v-for="weather in Weatherdata">
+            日期： <span>{{weather.date}}</span><a>      </a>
+            高温： <span>{{weather.high}}</span><a>     </a>
+            低温： <span>{{weather.low}}</span><a>       </a>
+            风向： <span>{{weather.fengxiang}}</span><a>        </a>
+            天气： <span>{{weather.type}}</span><a>       </a>
+            <br>
+        </li>
+    </ul>
+</div>
+
+<script>
+    var app = new Vue({
+        el:'#app',
+        data: {
+            city:'',
+            Weatherdata:[],
+            yesterday:'',
+        },
+        methods: {
+            getweather: function () {
+                var that = this;
+                var city = that.city;
+                axios.get('http://wthrcdn.etouch.cn/weather_mini?city='+city)
+                .then( function (response) {
+                    console.log(response.data.data.yesterday)
+                    that.yesterday = response.data.data.yesterday
+                    that.Weatherdata = response.data.data.forecast;
+                })
+                .catch( function (error) {
+                    console.log(error)
+                })
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

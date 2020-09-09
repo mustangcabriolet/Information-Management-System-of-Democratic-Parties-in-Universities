@@ -65,10 +65,18 @@ public class Partisan {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", gender=" + gender
-				+ ", telephone=" + telephone + ", address=" + address + "]";
+		return "Partisan{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", gender='" + gender + '\'' +
+				", telephone='" + telephone + '\'' +
+				", address='" + address + '\'' +
+				", partisan='" + partisan + '\'' +
+				", join_time='" + join_time + '\'' +
+				", school='" + school + '\'' +
+				'}';
 	}
-	
 }

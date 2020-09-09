@@ -7,13 +7,19 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import GP.domain.Partisan;
+import GP.service.LogConfig;
+import GP.service.PartisanServiceImpl;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+import cn.hutool.log.dialect.commons.ApacheCommonsLogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import GP.service.PartisanService;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,8 +29,11 @@ import com.github.pagehelper.PageInfo;
 public class PartisanController {
 
 	//注入service对象
+	@Autowired
+	private PartisanServiceImpl partisanService;
+
 	@Resource
-	private PartisanService partisanService;
+	private LogConfig logConfig;
 	
 	/**
 	 * 查询所有数据，给页面返回json格式数据
@@ -77,6 +86,7 @@ public class PartisanController {
 		long total = find_result.getTotal();
 		//当前页数据列表
 		List<Partisan> current_list = find_result.getList();
+		logConfig.log.info("当前页数"+total+"页");
 		data_to_jsp.put("total", total);
 		data_to_jsp.put("rows", current_list);
 		return data_to_jsp;
@@ -90,11 +100,11 @@ public class PartisanController {
 	public Map<String,Object> save(Partisan partisan){
 		try {
 			partisanService.save(partisan);
-			data_to_jsp.put("dataToJsp", true);
+			data_to_jsp.put("result", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			data_to_jsp.put("dataToJsp", false);
-			data_to_jsp.put("error", e.getMessage());
+			data_to_jsp.put("result", false);
+			data_to_jsp.put("msg", e.getMessage());
 		}
 		return data_to_jsp;
 	}
@@ -116,12 +126,23 @@ public class PartisanController {
 	public Map<String,Object> delete(Integer[] id){
 		try {
 			partisanService.delete(id);
-			data_to_jsp.put("dataToJsp", true);
+			data_to_jsp.put("result", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			data_to_jsp.put("dataToJsp", false);
-			data_to_jsp.put("error", e.getMessage());
+			data_to_jsp.put("result", false);
+			data_to_jsp.put("msg", e.getMessage());
 		}
 		return data_to_jsp;
+	}
+	@RequestMapping("exportAllUser")
+	public void exportAsExcel(HttpServletResponse response)
+	{
+		partisanService.exportexcel(response);
+
+	}
+	@RequestMapping("opennewpage")
+	public String opennewpage()
+	{
+		return "NewPage";
 	}
 }

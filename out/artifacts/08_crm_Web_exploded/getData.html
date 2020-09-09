@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript" src="easyui/vue.min.js"></script>
+<!--<script type="text/javascript" src="easyui/axios.js"></script>
+<script type="text/javascript" src="easyui/axios.min.js"></script>-->
+<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>党派信息</title>
+</head>
+<style>
+    #table{
+        border-collapse: collapse;
+    }
+</style>
+<body>
+<div id="app">
+<table id="table">
+    <tr>
+        <td>姓名</td>
+        <td>性别</td>
+        <td>手机号码</td>
+        <td>地址</td>
+        <td>党派</td>
+        <td>加入时间</td>
+        <td>学校</td>
+    </tr>
+    <tr v-for="data in obj">
+        <td>{{data.name}}</td>
+        <td>{{data.gender}}</td>
+        <td>{{data.telephone}}</td>
+        <td>{{data.address}}</td>
+        <td>{{data.partisan}}</td>
+        <td>{{data.join_time}}</td>
+        <td>{{data.school}}</td>
+    </tr>
+
+</table>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        data(){
+            return{
+                obj:''
+            }
+        },
+        mounted(){
+            var that = this;
+            axios.get('http://localhost:8080/08_crm_Web_exploded/partisan/list.action')
+            .then(function (response) {
+                console.log(response.data[0].name);
+                that.obj = response.data;
+                console.log(that.obj)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+        }
+    })
+</script>
+</body>
+</html>
